@@ -5,14 +5,20 @@
 #include <sys/types.h>
 #include <signal.h>
 #include <sys/msg.h>
-#define MSGKEY 75
+#define message_key 75
 
-typedef struct Node{
-	int flag;				// flag=1:cHELP,-1:sHELP;2:conInfo,-2:chgInfo
+// 管理员账号密码
+char username[] = "abcdefg";
+char password[] = "1234567";
+
+// 结点，保存状态
+typedef struct Node
+{
+	int flag;
 	char mtext[5001];
 	char chg[200];
 	char username[20];
-	char password[20];	
+	char password[20];
 	double clientMoney, sumPrice;
 	int na, nb, nc;
 	int isRight;
@@ -20,45 +26,49 @@ typedef struct Node{
 	int comArray[5];
 }Node;
 
-struct msgform{
+// 消息格式
+struct msgform
+{
 	long mtype;
 	Node node;
-//	char mtext[5001];
 }msg;
 
 int numA = 100;
 int numB = 100;
 int numC = 100;
 int comment[5] = {0};
-
-char username[] = "abcdefg";
-char password[] = "1234567";
-
 int msgqid;
 char helpPage[5001];
-void getHelp(){					//read help from the help page(file operation)		
-	char fn[] = "help.dat";
-	FILE *fd;
-	fd = fopen(fn, "r");   
-	if(fd == NULL){ 
-		printf("error!\n");
-		return;
+char res[100] = "";
+
+// 从帮助页面读取帮助（文件操作）
+void getHelp()
+{
+	FILE *file_pointer;
+	file_pointer = fopen("help.dat", "r");
+	if(file_pointer == NULL)
+	{
+		printf("文件不存在!\n");
 	}
-	int i = fread(helpPage,1,5001,fd);
-	helpPage[i] = 0;
-	fclose(fd);
-//	printf("%s", helpPage);
+	else
+	{
+	    int i = fread(helpPage,1,5001,file_pointer);
+	    helpPage[i] = 0;
+	    fclose(file_pointer);
+	}
+	return;
 } 
 
-char res[100] = "";
-void change(double a,double b)   	     //calculate the change(the maximum money you afford can not larger than 100)
+// 计算找零（负担得起的最大金额不能超过100）
+void change(double a,double b)
 {
 	strcpy(res, "");
-	int i;                    
+	int i;
 	a=a-b;
 	int j=a,k=j;
 
-	if(a==0) strcat(res, "0");	
+	if(a==0)
+		strcat(res, "0");
 
 	if(j-50>0)				
 	{
@@ -103,18 +113,20 @@ void change(double a,double b)   	     //calculate the change(the maximum money 
 	   strcat(res, " 1*0.5");
 }
 
-void cleanup(){
+void cleanup()
+{
 	msgctl(msgqid, IPC_RMID, 0);	
 }
 
-int main(){
+int main()
+{
 	int i;
 	for(i = 0; i < 20; ++i)
 	{
 		signal(i, cleanup);
 	}
 	
-	msgqid = msgget(MSGKEY, 0777|IPC_CREAT);
+	msgqid = msgget(message_key, 0777|IPC_CREAT);
 	while(1)
 	{
 		// 从客户端接收信息
@@ -154,7 +166,8 @@ int main(){
 
 			msgsnd(msgqid, &msg, sizeof(msg.node), 0);
 		}
-		else if(msg.node.flag == 3){
+		else if(msg.node.flag == 3)
+		{
 			puts("客户端开始购物，询问饮料数量");
 			msg.mtype = 1;
 			msg.node.na = numA;
@@ -162,14 +175,17 @@ int main(){
 			msg.node.nc = numC;	
 			msgsnd(msgqid, &msg, sizeof(msg.node), 0);		
 		}
-		else if(msg.node.flag == 4){
+		else if(msg.node.flag == 4)
+		{
  			puts("客户端尝试登录");
 			msg.mtype = 1;			
-			if(strcmp(msg.node.username, username) != 0){
+			if(strcmp(msg.node.username, username) != 0)
+			{
 				msg.node.isRight = 0;
 				puts("登陆失败！");
 			}
-			else if(strcmp(msg.node.password, password) != 0){
+			else if(strcmp(msg.node.password, password) != 0)
+			{
 				msg.node.isRight = 0;
 				puts("登陆失败！");
 			}
@@ -177,12 +193,14 @@ int main(){
 			msgsnd(msgqid, &msg, sizeof(msg.node), 0);
 			if(msg.node.isRight == 1) puts("登陆成功！");
 		}
-		else if(msg.node.flag == 5){
+		else if(msg.node.flag == 5)
+		{
 			puts("客户端给出了评价");
 			comment[0]++;
 			comment[msg.node.comment]++;	
 		}
-		else if(msg.node.flag == 6){
+		else if(msg.node.flag == 6)
+		{
 			puts("管理员请求添加饮料");
 			numA = 100;
 			numB = 100;
@@ -192,11 +210,13 @@ int main(){
 			msg.node.isRight = 1;
 			msgsnd(msgqid, &msg, sizeof(msg.node), 0);
 		}
-		else if(msg.node.flag ==7){
+		else if(msg.node.flag ==7)
+		{
 			puts("管理员检查评论");
 			msg.mtype = 1;
 			int ii;
-			for(ii = 0; ii < 5; ++ii){
+			for(ii = 0; ii < 5; ++ii)
+			{
 				msg.node.comArray[ii] = comment[ii];
 			}
 			msgsnd(msgqid, &msg, sizeof(msg.node), 0);
