@@ -1,18 +1,13 @@
 *******************************************************************************
-* 			direction for use                                     *
-* 1 : Enter 1 into shopping GUI at main GUI or Enter the button  	      *
-*     of RETERN to return main GUI 					      *
-*                        				      		      *
-* 2 : Then choose which kind of juice you want.If the rest number             *
-*     can't meet you,the machine will  point out " Sorry, we don't            *
-*     have enough juice to meet you,please wait or choose to buy litte ".     *									      *
-*								              *			      
-* 3 : You can base the price to put enough money to buy the juice             *
-*     you want. We can providethe server of odd change .We aslo supply        *
-*     the server of plastics to you. But you need to pay two pore to buy it.  *								      *
-*									      *
-* 4:  Befor you leave, you should check your thing to make sure you don't     *
-*     forget anything.                                                        *
-*									      *
-* 5:  God rest you merry!!! Thank you for you coming.Welcome last time.       *                
+ 			                 使用指南                                         
+  1 : 输入按键1进入售货页面，输入返回键回到开始界面。 	                      
+                                  					                          
+  2 : 然后您可以选择你所需要的饮料，如果您选择的饮料卖完了，这台机器会显示：  
+     “非常抱歉，我们没有足够的饮料，请您选择其他的饮料，谢谢”。     	      
+								                                              			      
+  3 : 你可以根据价钱来购买果汁，如果您余额不足，我们也提供了临时加钱的服务。  
+								                                          
+  4:  在您离开之前，你应该确认一下您的随身东西，避免遗忘和丢失。              
+									                                          
+  5 : 谢谢您的光顾！！！期待您的下次光临！！！祝您好运！！！                             
 *******************************************************************************
